@@ -10,7 +10,7 @@ In this project, we're going to implement a deep learning solution for eye gaze 
 ## Dataset
 For the dataset, we're going to use https://www.cl.cam.ac.uk/research/rainbow/projects/unityeyes/, to generate synthetic images of eye regions along with their labels (the direction of where the eye is looking). This data generation method combines a novel generative 3D model of the human eye region with a real-time rendering framework. The model is based on high-resolution 3D face scans and uses real-time approximations for complex eyeball materials and structures as well as anatomically inspired procedural geometry methods for eyelid animation. The training set of UnityEyes captures a large degree of appearance variation, which enables us to test against challenging images.
 
-![Alt text](/images/unityeye.png?raw=true "synthetic data using generative 3D eye regionmodel")
+![Alt text](https://raw.githubusercontent.com/DinarZayahov/PMLDL_EyeGazeTracking/main/unityeye.png "synthetic data using generative 3D eye regionmodel")
 
 
 ## Dependencies
