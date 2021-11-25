@@ -12,6 +12,12 @@ For the dataset, we're going to use https://www.cl.cam.ac.uk/research/rainbow/pr
 
 ![Alt text](./images/unityeye.png?raw=true "synthetic data using generative 3D eye region model" )
 
+## Model
+The Jupyter notebook with regression model for eye-gaze direction location is
+
+``
+source/predict_direction.ipynb
+``
 
 ## Dependencies
 
