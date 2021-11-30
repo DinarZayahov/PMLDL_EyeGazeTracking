@@ -22,7 +22,6 @@ The current architecture uses EfficientNet replacing the out-
 put layers with 2 fully connected layers to match the intended
 output size (2 in our case, the 𝑥 and 𝑦 positions of the gaze
 vector).
-![Alt text](./images/prediction.png?raw=true "predicted gaze-direction" )
 ## Usage
 - Install the required dependencies:
 
@@ -31,5 +30,5 @@ pip install -r requirements.txt
 ```
 - Run the inference script using the following command:
 ```
-python facial_landmarks.py
+python ./source/facial_landmarks.py
 ```
