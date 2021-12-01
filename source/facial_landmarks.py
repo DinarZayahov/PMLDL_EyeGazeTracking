@@ -41,7 +41,7 @@ def shape_to_np(shape, dtype="int"):
 def draw_arrow(img, points):
     c_x, c_y = points[0]
     x, y = points[1]
-    cv2.arrowedLine(img, (c_x, c_y), (c_x+x*80, c_y+y*80), (0, 255, 255), 2)
+    cv2.arrowedLine(img, (int(c_x), int(c_y)), (int(c_x+x*80), int(c_y+y*80)), (0, 255, 255), 2)
 
 
 # initialize dlib's face detector (HOG-based) and then create
