@@ -38,10 +38,18 @@ def shape_to_np(shape, dtype="int"):
     return coords
 
 
-def draw_arrow(img, points):
+def draw_arrow(img, points, translation):
     c_x, c_y = points[0]
-    x, y = points[1]
-    cv2.arrowedLine(img, (c_x, c_y), (c_x+x*80, c_y+y*80), (0, 255, 255), 2)
+    x, y = points[1][0], points[1][1]
+    translation_x, translation_y = translation
+    cv2.arrowedLine(img, (c_x, c_y), (c_x+x*80+translation_x, c_y+y*80+translation_y), (0, 255, 255), 2)
+    # cv2.circle(img, translation, 2, (255, 0, 255), 2)
+
+
+def return_eyes_region(image, shape, shift_y, shift_x):
+    left_eye = image[shape[0][1] - shift_y:shape[0][1] + shift_y, shape[1][0] - shift_x:shape[0][0] + shift_x]
+    right_eye = image[shape[2][1] - shift_y:shape[2][1] + shift_y, shape[2][0] - shift_x:shape[3][0] + shift_x]
+    return left_eye, right_eye
 
 
 # initialize dlib's face detector (HOG-based) and then create
@@ -89,8 +97,9 @@ while cap.isOpened():
         shape = shape[:4]
         shift = 20
 
-        left_eye = image[shape[0][1]-shift:shape[0][1]+shift, shape[1][0]:shape[0][0]]
-        right_eye = image[shape[2][1]-shift:shape[2][1]+shift, shape[2][0]:shape[3][0]]
+        # left_eye = image[shape[0][1]-shift:shape[0][1]+shift, shape[1][0]:shape[0][0]]
+        # right_eye = image[shape[2][1]-shift:shape[2][1]+shift, shape[2][0]:shape[3][0]]
+        left_eye, right_eye = return_eyes_region(image, shape, 30, 20)
 
         left_eye_center = (int(shape[1][0]+(shape[0][0]-shape[1][0])/2), shape[0][1])
         right_eye_center = (int(shape[2][0]+(shape[3][0]-shape[2][0])/2), shape[2][1])
@@ -104,16 +113,20 @@ while cap.isOpened():
             cv2.circle(image, (x, y), 1, (255, 0, 0), -1)
 
         # Predict once per 2 frames
-        if j % 2 == 0:
+        if j % 5 == 0:
             model = CNN1()
-            model.load_state_dict(torch.load('../models/model.pt', map_location=torch.device('cpu')))
+            model.load_state_dict(torch.load('../models/model2.pt', map_location=torch.device('cpu')))
             model.eval()
 
             # Left Eye
-            PIL_image = Image.fromarray(np.uint8(left_eye)).convert('RGB')
+            # PIL_image = Image.fromarray(np.uint8(left_eye)).convert('RGB')
+            PIL_image = Image.fromarray(left_eye).convert('RGB')
             img = transforms(PIL_image)
             out = model(img.unsqueeze(0))
-            draw_arrow(image, [left_eye_center, (out['label1'], out['label2'])])
+            translation_x = shape[1][0] - 20
+            translation_y = shape[1][1] - 30
+            # draw_arrow(image, [left_eye_center, (out['label1'], out['label2'])], (translation_x, translation_y))
+            draw_arrow(left_eye, [(0, 0), (out['label1'], out['label2'])], (0, 0))
 
             # Right Eye
             # PIL_imageR = Image.fromarray(np.uint8(right_eye)).convert('RGB')
@@ -121,17 +134,20 @@ while cap.isOpened():
             # outR = model(imgR.unsqueeze(0))
             # draw_arrow(image, [right_eye_center, (outR['label1'], outR['label2'])])
 
-    cv2.imshow("Output", cv2.flip(image, 1))
+    # cv2.imshow("Output", cv2.flip(image, 1))
+    cv2.imshow("Output", image)
 
     try:
         window_x = 900
         window_y = 170
         left_eye_window = 'Left eye'
         cv2.moveWindow(left_eye_window, window_x, window_y)
-        cv2.imshow(left_eye_window, cv2.flip(left_eye, 1))
+        # cv2.imshow(left_eye_window, cv2.flip(left_eye, 1))
+        cv2.imshow(left_eye_window, left_eye)
         right_eye_window = 'Right eye'
-        cv2.moveWindow(right_eye_window, window_x+35, window_y)
-        cv2.imshow(right_eye_window, cv2.flip(right_eye, 1))
+        cv2.moveWindow(right_eye_window, window_x+70, window_y)
+        # cv2.imshow(right_eye_window, cv2.flip(right_eye, 1))
+        cv2.imshow(right_eye_window, right_eye)
     except:
         print('can\'t see eyes')
 
