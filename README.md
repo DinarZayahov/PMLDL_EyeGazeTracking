@@ -13,14 +13,22 @@ For the dataset, we're going to use https://www.cl.cam.ac.uk/research/rainbow/pr
 ![Alt text](./images/unityeye.png?raw=true "synthetic data using generative 3D eye region model" )
 
 ## Model
-The Jupyter notebook with regression model for eye-gaze direction location is
+Using efficient-Net, we’re predicting the direction of the gaze
+vector, predicting the coordinates on the out- put image. Af-
+ter that, we’re using OpenCV to get the eye pupil’s position
+and other eye’s landmarks, then connecting it to the coordi-
+nates of the gaze vector to draw the gaze vector.
+The current architecture uses EfficientNet replacing the out-
+put layers with 2 fully connected layers to match the intended
+output size (2 in our case, the 𝑥 and 𝑦 positions of the gaze
+vector).
+## Usage
+- Install the required dependencies:
 
-``
-source/predict_direction.ipynb
-``
-
-## Dependencies
-
-``
+```
 pip install -r requirements.txt
-``
+```
+- Run the inference script using the following command:
+```
+python ./source/facial_landmarks.py
+```
